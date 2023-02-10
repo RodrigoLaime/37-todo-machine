@@ -1,0 +1,13 @@
+.TodoCounter {
+  font-size: 32px;
+  text-align: center;
+  margin: 0;
+  padding: 24px 10px;
+  font-family: sans-serif;
+  font-weight: 800;
+}
+
+.TodoCounter--loading {
+  color: white;
+  opacity: 75%;
+}
