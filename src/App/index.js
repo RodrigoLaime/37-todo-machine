@@ -17,20 +17,28 @@ import './App.css'
 function App() {
 
   const {
-    error,
+    states, 
+    stateUpdaters,
+  } = useTodos();//useTodos es un hook
+
+  const {//propiedades del estado
     loading,
-    searchedTodos,
-    completeTodo,
-    deleteTodo,
-    openModal,
-    setOpenModal,
+    error,
     totalTodos,
     completedTodos,
     searchValue,
+    searchedTodos,
+    openModal,
+  } = states;
+  
+  const {//actualizadores
     setSearchValue,
     addTodo,
-    sincronizeTodos,
-  } = useTodos();//useTodos es un hook
+    completeTodo,
+    deleteTodo,
+    setOpenModal,
+    sincronizeTodos
+  } = stateUpdaters;
 
   return (
 

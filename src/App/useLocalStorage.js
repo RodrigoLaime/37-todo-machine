@@ -9,14 +9,25 @@ function useLocalStorage(itemName, initialValue) {
     item,
   } = state;
 
-  /*   //Estado de sincronized
-    const [sincronizedItem, setSincronizedItem] = React.useState(true);
-    // estado de erro
-    const [error, setError] = React.useState(false);
-    // estado de loading
-    const [loading, setLoading] = React.useState(true);
-    // estado de todos
-    const [item, setItem] = React.useState(initialValue); */
+  //ACTION CREATORS
+  const onError = (error) => dispatch({ 
+    type: actionType.error, 
+    payload: error 
+  })
+  
+  const onSuccess = (item) => dispatch({
+     type: actionType.success,
+      payload: item
+     })
+
+  const onSave = (item) => dispatch({
+     type: actionType.save,
+      payload: item 
+    })
+
+  const onSincronise = () => dispatch({
+     type: actionType.sincronize,
+    })
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -35,17 +46,10 @@ function useLocalStorage(itemName, initialValue) {
           parsedItem = JSON.parse(localStorageItem)
         }
 
-        //actualize el valor del estado
-        setItem(parsedItem)
-
-        //quitar el loading
-        setLoading(false)
-
-        setSincronizedItem(true)
+        onSuccess(parsedItem);
 
       } catch (error) {
-        dispatch({ type: actionType.error, payload: error })
-        setError(error)
+        onError(error)
       }
     }, 3000);
   }, [sincronizedItem]);
@@ -60,15 +64,14 @@ function useLocalStorage(itemName, initialValue) {
       //persistencia
       localStorage.setItem(itemName, stringifiedItem)
       //evitar recargar la pagina, permite quedar con la ultima version
-      setItem(newItem)
+      onSave(newItem)
     } catch (error) {
-      setError(error)
+      onError(error)
     }
   }
 
   const sincronizeItem = () => {
-    setLoading(true)
-    setSincronizedItem(false)
+    onSincronise()
   }
 
   //actualizar los elementos
@@ -87,16 +90,41 @@ const initialState = ({ initialValue }) => ({
   loading: true,
   item: initialValue,
 })
+
 const actionType = {
   error: 'ERROR',
+  success: 'SUCCESS',
+  save: 'SAVE',
+  sincronize: 'SINCRONIZE'
 }
-const reducerObject = (state, payload) => {
+
+const reducerObject = (state, payload) => ({
   //crear action.type
-}
+  [actionType.error]: {
+    ...state,
+    error: true,
+  },
+  [actionType.success]: {
+    ...state,
+    error: false,
+    loading: false,
+    sincronizedItem: true,
+    item: payload,
+  },
+  [actionType.save]: {
+    ...state,
+    item: payload,
+  },
+  [actionType.sincronize]: {
+    ...state,
+    sincronizedItem: false,
+    loading: true,
+  },
+})
 
 const reducer = (state, action) => {
   //si no encuentra acton.type devuelve el estado de antes
-  reducerObject(state, action.payload)[action.type] || state;
+  return reducerObject(state, action.payload)[action.type] || state;
 };
 
 export { useLocalStorage }

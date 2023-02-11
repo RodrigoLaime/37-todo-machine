@@ -73,23 +73,29 @@ function useTodos() {
     saveTodos(newTodos);
   }
 
-  //
-  return {//indicar cual es el estado que vamos a compartir en todos los componentes que esta conteniendo
 
+  const states = {//indicar cual es el estado que vamos a compartir en todos los componentes que esta conteniendo
+    //propiedades del estado
     loading,
     error,
     totalTodos,
     completedTodos,
     searchValue,
-    setSearchValue,
     searchedTodos,
+    openModal,
+  };
+  
+  const stateUpdaters = {//indicar cual es el estado que vamos a compartir en todos los componentes que esta conteniendo
+    //actualizadores
+    setSearchValue,
     addTodo,
     completeTodo,
     deleteTodo,
-    openModal,
     setOpenModal,
     sincronizeTodos
   };
+   
+  return {states, stateUpdaters}
 }
 
 export { useTodos };
